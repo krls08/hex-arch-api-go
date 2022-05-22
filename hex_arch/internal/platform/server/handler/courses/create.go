@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	mooc "github.com/krls08/hex-arch-api-go/hex_arch/internal/platform"
+	mooc "github.com/krls08/hex-arch-api-go/hex_arch/internal"
 )
 
 type createRequest struct {
@@ -14,7 +14,7 @@ type createRequest struct {
 	Durantion string `json:"duration" binding:"required"`
 }
 
-func CreateHandler() gin.HandlerFunc {
+func CreateHandler(courseRepo mooc.CourseRepository) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		fmt.Println("createHandler start return")
 		var req createRequest
@@ -23,11 +23,13 @@ func CreateHandler() gin.HandlerFunc {
 			return
 		}
 
+		fmt.Println("validation done")
+
 		course := mooc.NewCourse(req.ID, req.Name, req.Durantion)
 		_ = course
-		//if err := Save(ctx, course); err != nil {
-		//	ctx.JSON(http.StatusInternalServerError, err.Error())
-		//}
+		if err := courseRepo.Save(ctx, course); err != nil {
+			ctx.JSON(http.StatusInternalServerError, err.Error())
+		}
 
 		ctx.Status(http.StatusCreated)
 

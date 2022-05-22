@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 
+	mooc "github.com/krls08/hex-arch-api-go/hex_arch/internal"
 	"github.com/krls08/hex-arch-api-go/hex_arch/internal/platform/server/handler/courses"
 	"github.com/krls08/hex-arch-api-go/hex_arch/internal/platform/server/handler/health"
 
@@ -13,12 +14,17 @@ import (
 type Server struct {
 	httpAddr string
 	engine   *gin.Engine
+
+	// deps
+	courseRepo mooc.CourseRepository
 }
 
-func New(host string, port uint) Server {
+func New(host string, port uint, courseRepository mooc.CourseRepository) Server {
 	srv := Server{
 		httpAddr: fmt.Sprintf(host + ":" + fmt.Sprint(port)),
 		engine:   gin.New(),
+
+		courseRepo: courseRepository,
 	}
 
 	srv.registerRoutes()
@@ -33,5 +39,5 @@ func (s *Server) Run() error {
 func (s *Server) registerRoutes() {
 	fmt.Println("Engine routes ...")
 	s.engine.GET("/health", health.CheckHandler())
-	s.engine.POST("/courses", courses.CreateHandler())
+	s.engine.POST("/courses", courses.CreateHandler(s.courseRepo))
 }
