@@ -26,7 +26,6 @@ func CreateHandler(courseRepo mooc.CourseRepository) gin.HandlerFunc {
 		fmt.Println("validation done")
 
 		course := mooc.NewCourse(req.ID, req.Name, req.Durantion)
-		_ = course
 		if err := courseRepo.Save(ctx, course); err != nil {
 			ctx.JSON(http.StatusInternalServerError, err.Error())
 		}
