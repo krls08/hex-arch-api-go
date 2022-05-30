@@ -107,4 +107,9 @@ Query OK, 1 row affected (0.18 sec)
 
 
 
+## Running test from commandline example
+go test -v internal/platform/server/handler/courses/*
+
+
+
 
