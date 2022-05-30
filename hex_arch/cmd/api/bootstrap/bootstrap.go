@@ -13,8 +13,11 @@ const (
 	host = "localhost"
 	port = 8080
 
-	dbUser = "krls"
-	dbPass = "123456"
+	//dbUser = "root"
+	//dbPass = "123456"
+	//dbHost = "localhost"
+	dbUser = "db_user"
+	dbPass = "password"
 	dbHost = "localhost"
 	dbPort = "3306"
 	dbName = "hex_arch_db"

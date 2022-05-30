@@ -1,11 +1,17 @@
 package courses
 
 import (
+	"bytes"
+	"encoding/json"
+	"net/http"
+	"net/http/httptest"
 	"testing"
 
 	"github.com/gin-gonic/gin"
 	"github.com/krls08/hex-arch-api-go/hex_arch/internal/platform/storage/storagemocks"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 func TestHandler_Create(t *testing.T) {
@@ -17,10 +23,47 @@ func TestHandler_Create(t *testing.T) {
 	r.POST("/courses", CreateHandler(courseRepository))
 
 	t.Run("given and invalid request it returns 400", func(t *testing.T) {
+		createCourseReq := createRequest{
+			ID:   "4ca073a2-e01f-11ec-9d64-0242ac120002",
+			Name: "Demo Course",
+		}
+
+		b, err := json.Marshal(createCourseReq)
+		require.NoError(t, err)
+
+		req, err := http.NewRequest(http.MethodPost, "/courses", bytes.NewBuffer(b))
+		require.NoError(t, err)
+
+		rec := httptest.NewRecorder()
+		r.ServeHTTP(rec, req)
+
+		res := rec.Result()
+		defer res.Body.Close()
+
+		assert.Equal(t, http.StatusBadRequest, res.StatusCode)
 
 	})
 
 	t.Run("given a valid request it returns 201", func(t *testing.T) {
+		createCourseReq := createRequest{
+			ID:       "4ca073a2-e01f-11ec-9d64-0242acStatusCode",
+			Name:     "Demo Course",
+			Duration: "10 months",
+		}
+
+		b, err := json.Marshal(createCourseReq)
+		require.NoError(t, err)
+
+		req, err := http.NewRequest(http.MethodPost, "/courses", bytes.NewBuffer(b))
+		require.NoError(t, err)
+
+		rec := httptest.NewRecorder()
+		r.ServeHTTP(rec, req)
+
+		res := rec.Result()
+		defer res.Body.Close()
+
+		assert.Equal(t, http.StatusCreated, res.StatusCode)
 
 	})
 }
