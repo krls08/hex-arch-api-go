@@ -84,7 +84,11 @@ mysql> show tables;
 grant permisions to user
 mysql> GRANT ALL PRIVILEGES ON *.* TO 'db_user'@'%';
 grant permisions to certain table:
-GRANT permission_type ON database.table TO 'username'@'localhost';
+mysql> GRANT permission_type ON database.table TO 'username'@'localhost';
+
+mysql> SHOW GRANTS FOR 'db_user';
+mysql> SHOW GRANTS FOR 'db_user'@'%'; // also...
+
 
 logout
 mysql> \q

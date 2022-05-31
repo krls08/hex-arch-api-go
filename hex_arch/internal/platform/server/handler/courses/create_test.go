@@ -15,6 +15,7 @@ import (
 )
 
 func TestHandler_Create(t *testing.T) {
+	//courseRepository := new(storagemocks.CourseRepository)
 	courseRepository := new(storagemocks.CourseRepository)
 	courseRepository.On("Save", mock.Anything, mock.AnythingOfType("mooc.Course")).Return(nil)
 
@@ -48,7 +49,7 @@ func TestHandler_Create(t *testing.T) {
 		createCourseReq := createRequest{
 			ID:       "4ca073a2-e01f-11ec-9d64-0242ac120002",
 			Name:     "Demo Course",
-			Duration: "10 months",
+			Duration: "10 hours",
 		}
 
 		b, err := json.Marshal(createCourseReq)
