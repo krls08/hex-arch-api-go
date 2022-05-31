@@ -110,9 +110,9 @@ mysql> insert into courses (id, name, duration) values ('4ca073a2-e01f-11ec-9d64
 Query OK, 1 row affected (0.18 sec)
 
 
-
 ## Running test from commandline example
 go test -v internal/platform/server/handler/courses/*
+
 
 
 
