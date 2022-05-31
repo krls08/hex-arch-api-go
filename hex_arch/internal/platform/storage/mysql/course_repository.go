@@ -36,14 +36,14 @@ func (r *CourseRepository) Save(ctx context.Context, course mooc.Course) error {
 	return nil
 }
 
-func (r *CourseRepository) GetCourses(ctx context.Context) ([]*mooc.Course, error) {
+func (r *CourseRepository) GetCourses(ctx context.Context) ([]mooc.Course, error) {
 	//courseSQLStruct := sqlbuilder.NewStruct(new(sqlCourse))
 	rows, err := r.db.Query("SELECT * FROM courses")
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	courses := []*mooc.Course{}
+	courses := []mooc.Course{}
 	sqlcourses := []sqlCourse{}
 	for rows.Next() {
 		var course sqlCourse
@@ -55,7 +55,7 @@ func (r *CourseRepository) GetCourses(ctx context.Context) ([]*mooc.Course, erro
 		if err != nil {
 			return courses, err
 		}
-		courses = append(courses, &dom_course)
+		courses = append(courses, dom_course)
 	}
 
 	if err = rows.Err(); err != nil {

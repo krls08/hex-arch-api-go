@@ -17,15 +17,15 @@ type CourseRepository struct {
 }
 
 // GetCourses provides a mock function with given fields: ctx
-func (_m *CourseRepository) GetCourses(ctx context.Context) ([]*mooc.Course, error) {
+func (_m *CourseRepository) GetCourses(ctx context.Context) ([]mooc.Course, error) {
 	ret := _m.Called(ctx)
 
-	var r0 []*mooc.Course
-	if rf, ok := ret.Get(0).(func(context.Context) []*mooc.Course); ok {
+	var r0 []mooc.Course
+	if rf, ok := ret.Get(0).(func(context.Context) []mooc.Course); ok {
 		r0 = rf(ctx)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]*mooc.Course)
+			r0 = ret.Get(0).([]mooc.Course)
 		}
 	}
 
