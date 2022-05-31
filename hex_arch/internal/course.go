@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"regexp"
 
 	"github.com/google/uuid"
 )
@@ -11,6 +12,7 @@ import (
 var ErrInvalidCopurseID = errors.New("invalid Course ID")
 var ErrEmptyCourseName = errors.New("the field Course Name can not be empty")
 var ErrEmptyDuration = errors.New("the field Duration can not be empty")
+var ErrMissingHours = errors.New("duration must contain hours")
 
 // CourseID represents the course uinique identifier
 type CourseID struct {
@@ -62,6 +64,14 @@ func NewCourseDuration(value string) (CourseDuration, error) {
 	if value == "" {
 		return CourseDuration{}, ErrEmptyDuration
 	}
+	// must contain the hours
+	isOk, err := regexp.MatchString("hours", value)
+	if err != nil {
+		return CourseDuration{}, err
+	}
+	if !isOk {
+		return CourseDuration{}, ErrMissingHours
+	}
 
 	return CourseDuration{
 		value: value,
@@ -76,6 +86,7 @@ func (duration CourseDuration) String() string {
 // CourseRepo defines the xepected behavieour form a course storage
 type CourseRepository interface {
 	Save(ctx context.Context, course Course) error
+	GetCourses(ctx context.Context) ([]*Course, error)
 }
 
 //go:generate mockery --case=snake --outpkg=storagemocks --output=platform/storage/storagemocks --name=CourseRepository

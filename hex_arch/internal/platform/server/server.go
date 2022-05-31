@@ -40,4 +40,5 @@ func (s *Server) registerRoutes() {
 	fmt.Println("Engine routes ...")
 	s.engine.GET("/health", health.CheckHandler())
 	s.engine.POST("/courses", courses.CreateHandler(s.courseRepo))
+	s.engine.GET("/courses", courses.GetHandler(s.courseRepo))
 }
