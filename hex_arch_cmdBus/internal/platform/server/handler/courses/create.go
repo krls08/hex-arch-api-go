@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	mooc "github.com/krls08/hex-arch-api-go/hex_arch_cmdBus/internal"
 	"github.com/krls08/hex-arch-api-go/hex_arch_cmdBus/internal/creating"
+	"github.com/krls08/hex-arch-api-go/hex_arch_cmdBus/kit/command"
 )
 
 type createRequest struct {
@@ -16,7 +17,7 @@ type createRequest struct {
 	Duration string `json:"duration" binding:"required"`
 }
 
-func CreateHandler(creatingCourseService creating.CourseService) gin.HandlerFunc {
+func CreateHandler(commandBus command.Bus) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		fmt.Println("createHandler start return")
 		var req createRequest
@@ -26,8 +27,8 @@ func CreateHandler(creatingCourseService creating.CourseService) gin.HandlerFunc
 		}
 
 		fmt.Println("validation done")
+		err := commandBus.Dispatch(ctx, creating.NewCourseCommand(req.ID, req.Name, req.Duration))
 
-		err := creatingCourseService.CreateCourse(ctx, req.ID, req.Name, req.Duration)
 		// Errors handling
 		if err != nil {
 			switch {
