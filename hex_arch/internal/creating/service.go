@@ -29,3 +29,8 @@ func (s CourseService) CreateCourse(ctx context.Context, id, name, duration stri
 	}
 	return s.courseRepository.Save(ctx, course)
 }
+
+func (s CourseService) GetAllCourses(ctx context.Context) ([]mooc.Course, error) {
+	fmt.Println("Get all courses application layer")
+	return s.courseRepository.GetCourses(ctx)
+}

@@ -1,11 +1,13 @@
 package courses
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	mooc "github.com/krls08/hex-arch-api-go/hex_arch/internal"
+	"github.com/krls08/hex-arch-api-go/hex_arch/internal/creating"
 )
 
 type GetRespC struct {
@@ -14,14 +16,24 @@ type GetRespC struct {
 	Duration string `json:"duration" binding:"required"`
 }
 
-func GetHandler(courseRepo mooc.CourseRepository) gin.HandlerFunc {
+func GetHandler(getCourseService creating.CourseService) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		fmt.Println("GetCoursesHandler start return")
-		courses, err := courseRepo.GetCourses(ctx.Request.Context())
+		courses, err := getCourseService.GetAllCourses(ctx.Request.Context())
 		if err != nil {
-			ctx.JSON(http.StatusInternalServerError, err.Error())
-			return
+			switch {
+			case errors.Is(err, mooc.ErrInvalidCopurseID), errors.Is(err, mooc.ErrEmptyCourseName),
+				errors.Is(err, mooc.ErrEmptyDuration), errors.Is(err, mooc.ErrMissingHours):
+
+				ctx.JSON(http.StatusBadRequest, err.Error())
+				return
+			default:
+				ctx.JSON(http.StatusInternalServerError, err.Error())
+				return
+
+			}
 		}
+
 		respCourses := make([]GetRespC, 0, len(courses))
 		for _, v := range courses {
 			course := GetRespC{

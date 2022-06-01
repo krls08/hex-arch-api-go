@@ -17,7 +17,6 @@ type Server struct {
 	engine   *gin.Engine
 
 	// deps
-	courseRepo            mooc.CourseRepository
 	creatingCourseService creating.CourseService
 }
 
@@ -26,7 +25,6 @@ func New(host string, port uint, creatingCourseService creating.CourseService, c
 		httpAddr: fmt.Sprintf(host + ":" + fmt.Sprint(port)),
 		engine:   gin.New(),
 
-		courseRepo:            courseRepository,
 		creatingCourseService: creatingCourseService,
 	}
 
@@ -43,5 +41,5 @@ func (s *Server) registerRoutes() {
 	fmt.Println("Engine routes ...")
 	s.engine.GET("/health", health.CheckHandler())
 	s.engine.POST("/courses", courses.CreateHandler(s.creatingCourseService))
-	s.engine.GET("/courses", courses.GetHandler(s.courseRepo))
+	s.engine.GET("/courses", courses.GetHandler(s.creatingCourseService))
 }
