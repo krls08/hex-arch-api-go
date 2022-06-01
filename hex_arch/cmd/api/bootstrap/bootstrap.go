@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/krls08/hex-arch-api-go/hex_arch/internal/creating"
 	"github.com/krls08/hex-arch-api-go/hex_arch/internal/platform/server"
 	"github.com/krls08/hex-arch-api-go/hex_arch/internal/platform/storage/mysql"
 )
@@ -31,8 +32,9 @@ func Run() error {
 	}
 
 	courseRepository := mysql.NewCourseRepository(db)
+	creatingCourseService := creating.NewCourseSerivce(courseRepository)
 
-	srv := server.New(host, port, courseRepository)
+	srv := server.New(host, port, creatingCourseService, courseRepository)
 
 	return srv.Run()
 }

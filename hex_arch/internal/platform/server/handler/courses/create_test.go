@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
+	"github.com/krls08/hex-arch-api-go/hex_arch/internal/creating"
 	"github.com/krls08/hex-arch-api-go/hex_arch/internal/platform/storage/storagemocks"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -16,12 +17,14 @@ import (
 
 func TestHandler_Create(t *testing.T) {
 	//courseRepository := new(storagemocks.CourseRepository)
-	courseRepository := new(storagemocks.CourseRepository)
-	courseRepository.On("Save", mock.Anything, mock.AnythingOfType("mooc.Course")).Return(nil)
+	repositoryMock := new(storagemocks.CourseRepository)
+	repositoryMock.On("Save", mock.Anything, mock.AnythingOfType("mooc.Course")).Return(nil)
+
+	createCourseService := creating.NewCourseSerivce(repositoryMock)
 
 	gin.SetMode(gin.TestMode)
 	r := gin.New()
-	r.POST("/courses", CreateHandler(courseRepository))
+	r.POST("/courses", CreateHandler(createCourseService))
 
 	t.Run("given and invalid request it returns 400", func(t *testing.T) {
 		createCourseReq := createRequest{
