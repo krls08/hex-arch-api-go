@@ -45,13 +45,13 @@ Edit user password:
 mysql> ALTER USER 'db_user'@'%' IDENTIFIED BY 'new_password';
 
 Create database:
-mysql> CREATE DATABASE hex_arch_db;
+mysql> CREATE DATABASE hex_arch_cmdBus_db;
 
 mysql> show databases;
 +--------------------+
 | Database           |
 +--------------------+
-| hex_arch_db        |
+| hex_arch_cmdBus_db        |
 | information_schema |
 | mysql              |
 | performance_schema |
@@ -59,7 +59,7 @@ mysql> show databases;
 +--------------------+
 
 Use the created database to create a table
-mysql> use hex_arch_db;
+mysql> use hex_arch_cmdBus_db;
 
 Create table:
 mysql> CREATE TABLE courses
@@ -75,7 +75,7 @@ mysql> CREATE TABLE courses
 
 mysql> show tables;
 +-----------------------+
-| Tables_in_hex_arch_db |
+| Tables_in_hex_arch_cmdBus_db |
 +-----------------------+
 | courses               |
 +-----------------------+
@@ -97,7 +97,7 @@ login as new user
 $ mysql -u db_user -p
 > password
 
-mysql> use hex_arch_db;
+mysql> use hex_arch_cmdBus_db;
 mysql> select * from courses;
 
 to view if there is any record in courses database

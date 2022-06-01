@@ -5,7 +5,7 @@ package storagemocks
 import (
 	context "context"
 
-	mooc "github.com/krls08/hex-arch-api-go/hex_arch/internal"
+	mooc "github.com/krls08/hex-arch-api-go/hex_arch_cmdBus/internal"
 	mock "github.com/stretchr/testify/mock"
 )
 

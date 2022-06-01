@@ -5,8 +5,8 @@ import (
 	"errors"
 	"testing"
 
-	mooc "github.com/krls08/hex-arch-api-go/hex_arch/internal"
-	"github.com/krls08/hex-arch-api-go/hex_arch/internal/platform/storage/storagemocks"
+	mooc "github.com/krls08/hex-arch-api-go/hex_arch_cmdBus/internal"
+	"github.com/krls08/hex-arch-api-go/hex_arch_cmdBus/internal/platform/storage/storagemocks"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"

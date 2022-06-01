@@ -8,8 +8,8 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
-	"github.com/krls08/hex-arch-api-go/hex_arch/internal/creating"
-	"github.com/krls08/hex-arch-api-go/hex_arch/internal/platform/storage/storagemocks"
+	"github.com/krls08/hex-arch-api-go/hex_arch_cmdBus/internal/creating"
+	"github.com/krls08/hex-arch-api-go/hex_arch_cmdBus/internal/platform/storage/storagemocks"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"

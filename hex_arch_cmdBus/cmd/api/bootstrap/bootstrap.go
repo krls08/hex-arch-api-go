@@ -5,9 +5,9 @@ import (
 	"fmt"
 
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/krls08/hex-arch-api-go/hex_arch/internal/creating"
-	"github.com/krls08/hex-arch-api-go/hex_arch/internal/platform/server"
-	"github.com/krls08/hex-arch-api-go/hex_arch/internal/platform/storage/mysql"
+	"github.com/krls08/hex-arch-api-go/hex_arch_cmdBus/internal/creating"
+	"github.com/krls08/hex-arch-api-go/hex_arch_cmdBus/internal/platform/server"
+	"github.com/krls08/hex-arch-api-go/hex_arch_cmdBus/internal/platform/storage/mysql"
 )
 
 const (

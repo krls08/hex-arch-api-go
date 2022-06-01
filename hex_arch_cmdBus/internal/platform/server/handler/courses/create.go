@@ -6,8 +6,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	mooc "github.com/krls08/hex-arch-api-go/hex_arch/internal"
-	"github.com/krls08/hex-arch-api-go/hex_arch/internal/creating"
+	mooc "github.com/krls08/hex-arch-api-go/hex_arch_cmdBus/internal"
+	"github.com/krls08/hex-arch-api-go/hex_arch_cmdBus/internal/creating"
 )
 
 type createRequest struct {

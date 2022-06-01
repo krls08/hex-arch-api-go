@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	mooc "github.com/krls08/hex-arch-api-go/hex_arch/internal"
+	mooc "github.com/krls08/hex-arch-api-go/hex_arch_cmdBus/internal"
 )
 
 // CourseService is the default CourseService interface

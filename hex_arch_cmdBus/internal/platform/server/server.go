@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"log"
 
-	mooc "github.com/krls08/hex-arch-api-go/hex_arch/internal"
-	"github.com/krls08/hex-arch-api-go/hex_arch/internal/creating"
-	"github.com/krls08/hex-arch-api-go/hex_arch/internal/platform/server/handler/courses"
-	"github.com/krls08/hex-arch-api-go/hex_arch/internal/platform/server/handler/health"
+	mooc "github.com/krls08/hex-arch-api-go/hex_arch_cmdBus/internal"
+	"github.com/krls08/hex-arch-api-go/hex_arch_cmdBus/internal/creating"
+	"github.com/krls08/hex-arch-api-go/hex_arch_cmdBus/internal/platform/server/handler/courses"
+	"github.com/krls08/hex-arch-api-go/hex_arch_cmdBus/internal/platform/server/handler/health"
 
 	"github.com/gin-gonic/gin"
 )
