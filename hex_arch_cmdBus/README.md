@@ -51,7 +51,7 @@ mysql> show databases;
 +--------------------+
 | Database           |
 +--------------------+
-| hex_arch_cmdBus_db        |
+| hex_arch_cmdBus_db |
 | information_schema |
 | mysql              |
 | performance_schema |

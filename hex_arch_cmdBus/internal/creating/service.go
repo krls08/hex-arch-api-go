@@ -14,7 +14,7 @@ type CourseService struct {
 }
 
 // NewCourseService returns de default Service interface implementation
-func NewCourseSerivce(courseRepository mooc.CourseRepository) CourseService {
+func NewCourseService(courseRepository mooc.CourseRepository) CourseService {
 	return CourseService{
 		courseRepository: courseRepository,
 	}
@@ -28,9 +28,4 @@ func (s CourseService) CreateCourse(ctx context.Context, id, name, duration stri
 		return err
 	}
 	return s.courseRepository.Save(ctx, course)
-}
-
-func (s CourseService) GetAllCourses(ctx context.Context) ([]mooc.Course, error) {
-	fmt.Println("Get all courses application layer")
-	return s.courseRepository.GetCourses(ctx)
 }

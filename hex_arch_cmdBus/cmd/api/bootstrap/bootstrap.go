@@ -6,6 +6,7 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/krls08/hex-arch-api-go/hex_arch_cmdBus/internal/creating"
+	"github.com/krls08/hex-arch-api-go/hex_arch_cmdBus/internal/fetching"
 	"github.com/krls08/hex-arch-api-go/hex_arch_cmdBus/internal/platform/bus/inmemory"
 	"github.com/krls08/hex-arch-api-go/hex_arch_cmdBus/internal/platform/server"
 	"github.com/krls08/hex-arch-api-go/hex_arch_cmdBus/internal/platform/storage/mysql"
@@ -37,12 +38,13 @@ func Run() error {
 	)
 
 	courseRepository := mysql.NewCourseRepository(db)
-	creatingCourseService := creating.NewCourseSerivce(courseRepository)
+	creatingCourseService := creating.NewCourseService(courseRepository)
+	fetchingCourseService := fetching.NewCourseService(courseRepository)
 
 	createCourseCommandHandler := creating.NewCourseCommandHandler(creatingCourseService)
 	commandBus.Register(creating.CourseCommandType, createCourseCommandHandler)
 
-	srv := server.New(host, port, commandBus, creatingCourseService)
+	srv := server.New(host, port, commandBus, creatingCourseService, fetchingCourseService)
 
 	return srv.Run()
 }

@@ -7,16 +7,16 @@ import (
 
 	"github.com/gin-gonic/gin"
 	mooc "github.com/krls08/hex-arch-api-go/hex_arch_cmdBus/internal"
-	"github.com/krls08/hex-arch-api-go/hex_arch_cmdBus/internal/creating"
+	"github.com/krls08/hex-arch-api-go/hex_arch_cmdBus/internal/fetching"
 )
 
-type GetRespC struct {
+type GetRespCourse struct {
 	ID       string `json:"id" binding:"required"`
 	Name     string `json:"name" binding:"required"`
 	Duration string `json:"duration" binding:"required"`
 }
 
-func GetHandler(getCourseService creating.CourseService) gin.HandlerFunc {
+func GetHandler(getCourseService fetching.CourseService) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		fmt.Println("GetCoursesHandler start return")
 		courses, err := getCourseService.GetAllCourses(ctx.Request.Context())
@@ -34,9 +34,9 @@ func GetHandler(getCourseService creating.CourseService) gin.HandlerFunc {
 			}
 		}
 
-		respCourses := make([]GetRespC, 0, len(courses))
+		respCourses := make([]GetRespCourse, 0, len(courses))
 		for _, v := range courses {
-			course := GetRespC{
+			course := GetRespCourse{
 				ID:       v.ID().String(),
 				Name:     v.Name().String(),
 				Duration: v.Duration().String(),
