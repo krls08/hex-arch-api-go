@@ -5,18 +5,21 @@ import (
 	"fmt"
 
 	mooc "github.com/krls08/hex-arch-api-go/hex_arch_cmdBus/internal"
+	"github.com/krls08/hex-arch-api-go/hex_arch_cmdBus/kit/event"
 )
 
 // CourseService is the default CourseService interface
 // implementation returned by creating.NewCourseService
 type CourseService struct {
 	courseRepository mooc.CourseRepository
+	eventBus         event.Bus
 }
 
 // NewCourseService returns de default Service interface implementation
-func NewCourseService(courseRepository mooc.CourseRepository) CourseService {
+func NewCourseService(courseRepository mooc.CourseRepository, eventBus event.Bus) CourseService {
 	return CourseService{
 		courseRepository: courseRepository,
+		eventBus:         eventBus,
 	}
 }
 

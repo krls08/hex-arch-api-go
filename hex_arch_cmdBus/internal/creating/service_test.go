@@ -7,6 +7,7 @@ import (
 
 	mooc "github.com/krls08/hex-arch-api-go/hex_arch_cmdBus/internal"
 	"github.com/krls08/hex-arch-api-go/hex_arch_cmdBus/internal/platform/storage/storagemocks"
+	"github.com/krls08/hex-arch-api-go/hex_arch_cmdBus/kit/event/eventmocks"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
@@ -20,13 +21,14 @@ func Test_CourseService_CreateCourse_RepositoryError(t *testing.T) {
 	course, err := mooc.NewCourse(courseID, courseName, courseDuration)
 	require.NoError(t, err)
 
-	courseRespositoryMock := new(storagemocks.CourseRepository)
-	courseRespositoryMock.On("Save", mock.Anything, course).Return(errors.New("something unexpected happened"))
+	courseRepositoryMock := new(storagemocks.CourseRepository)
+	courseRepositoryMock.On("Save", mock.Anything, course).Return(errors.New("something unexpected happened"))
 
-	courseService := NewCourseService(courseRespositoryMock)
+	eventBusMock := new(eventmocks.Bus)
 
+	courseService := NewCourseService(courseRepositoryMock, eventBusMock)
 	err = courseService.CreateCourse(context.Background(), courseID, courseName, courseDuration)
-	courseRespositoryMock.AssertExpectations(t)
+	courseRepositoryMock.AssertExpectations(t)
 	assert.Error(t, err)
 }
 
@@ -38,13 +40,14 @@ func Test_CourseService_CreateCourse_Succeed(t *testing.T) {
 	course, err := mooc.NewCourse(courseID, courseName, courseDuration)
 	require.NoError(t, err)
 
-	courseRespositoryMock := new(storagemocks.CourseRepository)
-	courseRespositoryMock.On("Save", mock.Anything, course).Return(nil)
+	courseRepositoryMock := new(storagemocks.CourseRepository)
+	courseRepositoryMock.On("Save", mock.Anything, course).Return(nil)
+	eventBusMock := new(eventmocks.Bus)
 
-	courseService := NewCourseService(courseRespositoryMock)
+	courseService := NewCourseService(courseRepositoryMock, eventBusMock)
 
 	err = courseService.CreateCourse(context.Background(), courseID, courseName, courseDuration)
 
-	courseRespositoryMock.AssertExpectations(t)
+	courseRepositoryMock.AssertExpectations(t)
 	assert.NoError(t, err)
 }

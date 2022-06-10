@@ -7,8 +7,10 @@ import (
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
+	mooc "github.com/krls08/hex-arch-api-go/hex_arch_cmdBus/internal"
 	"github.com/krls08/hex-arch-api-go/hex_arch_cmdBus/internal/creating"
 	"github.com/krls08/hex-arch-api-go/hex_arch_cmdBus/internal/fetching"
+	"github.com/krls08/hex-arch-api-go/hex_arch_cmdBus/internal/increasing"
 	"github.com/krls08/hex-arch-api-go/hex_arch_cmdBus/internal/platform/bus/inmemory"
 	"github.com/krls08/hex-arch-api-go/hex_arch_cmdBus/internal/platform/server"
 	"github.com/krls08/hex-arch-api-go/hex_arch_cmdBus/internal/platform/storage/mysql"
@@ -39,15 +41,21 @@ func Run() error {
 
 	var (
 		commandBus = inmemory.NewCommandBus()
+		eventBus   = inmemory.NewEventBus()
 	)
 
 	courseRepository := mysql.NewCourseRepository(db, dbTimeout)
-	creatingCourseService := creating.NewCourseService(courseRepository)
+	creatingCourseService := creating.NewCourseService(courseRepository, eventBus)
+	increasingCourseService := increasing.NewCourseCounterService()
 	fetchingCourseService := fetching.NewCourseService(courseRepository)
 
 	createCourseCommandHandler := creating.NewCourseCommandHandler(creatingCourseService)
 	commandBus.Register(creating.CourseCommandType, createCourseCommandHandler)
 
+	eventBus.Subscribe(
+		mooc.CourseCreatedEventType,
+		creating.NewIncreaseCoursesCounterOnCourseCreated(increasingCourseService),
+	)
 	//ctx, srv := server.New(context.Background(), host, port, shutdownTimeout, commandBus, creatingCourseService, fetchingCourseService) //creatingCourseService will be inside command bus
 	ctx, srv := server.New(context.Background(), host, port, shutdownTimeout, commandBus, fetchingCourseService)
 
