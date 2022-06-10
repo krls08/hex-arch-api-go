@@ -1,8 +1,10 @@
 package bootstrap
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
+	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/krls08/hex-arch-api-go/hex_arch_cmdBus/internal/creating"
@@ -19,11 +21,12 @@ const (
 	//dbUser = "root"
 	//dbPass = "123456"
 	//dbHost = "localhost"
-	dbUser = "db_user"
-	dbPass = "password"
-	dbHost = "localhost"
-	dbPort = "3306"
-	dbName = "hex_arch_db"
+	dbUser          = "db_user"
+	dbPass          = "password"
+	dbHost          = "localhost"
+	dbPort          = "3306"
+	dbName          = "hex_arch_db"
+	shutdownTimeout = 10 * time.Second
 )
 
 func Run() error {
@@ -44,7 +47,8 @@ func Run() error {
 	createCourseCommandHandler := creating.NewCourseCommandHandler(creatingCourseService)
 	commandBus.Register(creating.CourseCommandType, createCourseCommandHandler)
 
-	srv := server.New(host, port, commandBus, creatingCourseService, fetchingCourseService)
+	//ctx, srv := server.New(context.Background(), host, port, shutdownTimeout, commandBus, creatingCourseService, fetchingCourseService) //creatingCourseService will be inside command bus
+	ctx, srv := server.New(context.Background(), host, port, shutdownTimeout, commandBus, fetchingCourseService)
 
-	return srv.Run()
+	return srv.Run(ctx)
 }

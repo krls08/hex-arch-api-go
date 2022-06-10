@@ -1,10 +1,14 @@
 package server
 
 import (
+	"context"
 	"fmt"
 	"log"
+	"net/http"
+	"os"
+	"os/signal"
+	"time"
 
-	"github.com/krls08/hex-arch-api-go/hex_arch_cmdBus/internal/creating"
 	"github.com/krls08/hex-arch-api-go/hex_arch_cmdBus/internal/fetching"
 	"github.com/krls08/hex-arch-api-go/hex_arch_cmdBus/internal/platform/server/handler/courses"
 	"github.com/krls08/hex-arch-api-go/hex_arch_cmdBus/internal/platform/server/handler/health"
@@ -17,32 +21,62 @@ type Server struct {
 	httpAddr string
 	engine   *gin.Engine
 
+	shutdownTimeout time.Duration
+
 	// deps
-	creatingCourseService creating.CourseService
+	//creatingCourseService creating.CourseService -> this is inside command bus
 	fetchingCourseService fetching.CourseService
 	commandBus            command.Bus
 }
 
-func New(host string, port uint, commandBus command.Bus,
-	creatingCourseService creating.CourseService,
-	fetchingCourseService fetching.CourseService) Server {
+func New(ctx context.Context, host string, port uint, shutdownTimeout time.Duration, commandBus command.Bus,
+	//creatingCourseService creating.CourseService,
+	fetchingCourseService fetching.CourseService) (context.Context, Server) {
 	srv := Server{
 		httpAddr: fmt.Sprintf(host + ":" + fmt.Sprint(port)),
 		engine:   gin.New(),
 
-		creatingCourseService: creatingCourseService,
+		shutdownTimeout: shutdownTimeout,
+		//creatingCourseService: creatingCourseService,
 		fetchingCourseService: fetchingCourseService,
 
 		commandBus: commandBus,
 	}
 
 	srv.registerRoutes()
-	return srv
+	return serverContext(ctx), srv
 }
 
-func (s *Server) Run() error {
+func (s *Server) Run(ctx context.Context) error {
 	log.Println("Server running on", s.httpAddr)
-	return s.engine.Run(s.httpAddr)
+	srv := &http.Server{
+		Addr:    s.httpAddr,
+		Handler: s.engine,
+	}
+
+	go func() {
+		if err := srv.ListenAndServe(); err != nil &&
+			err != http.ErrServerClosed {
+			log.Fatal("Server shutdown", err)
+		}
+	}()
+
+	<-ctx.Done()
+
+	return srv.Shutdown(ctx)
+}
+
+func serverContext(ctx context.Context) context.Context {
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt)
+	ctx, cancel := context.WithCancel(ctx)
+
+	go func() {
+		<-c
+		cancel()
+	}()
+
+	return ctx
 }
 
 func (s *Server) registerRoutes() {
