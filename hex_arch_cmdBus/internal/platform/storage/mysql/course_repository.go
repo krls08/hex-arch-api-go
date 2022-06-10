@@ -4,18 +4,21 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"time"
 
 	"github.com/huandu/go-sqlbuilder"
 	mooc "github.com/krls08/hex-arch-api-go/hex_arch_cmdBus/internal"
 )
 
 type CourseRepository struct {
-	db *sql.DB
+	db        *sql.DB
+	dbTimeout time.Duration
 }
 
-func NewCourseRepository(db *sql.DB) *CourseRepository {
+func NewCourseRepository(db *sql.DB, aDbTimeout time.Duration) *CourseRepository {
 	return &CourseRepository{
-		db: db,
+		db:        db,
+		dbTimeout: aDbTimeout,
 	}
 }
 
@@ -28,7 +31,10 @@ func (r *CourseRepository) Save(ctx context.Context, course mooc.Course) error {
 		Duration: course.Duration().String(),
 	}).Build()
 
-	_, err := r.db.ExecContext(ctx, query, args...)
+	ctxTimeout, cancel := context.WithTimeout(ctx, r.dbTimeout)
+	defer cancel()
+
+	_, err := r.db.ExecContext(ctxTimeout, query, args...)
 	if err != nil {
 		return fmt.Errorf("error trying to persist course on database: %v", err)
 	}

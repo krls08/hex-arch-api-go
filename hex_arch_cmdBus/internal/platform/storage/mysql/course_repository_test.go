@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"testing"
+	"time"
 
 	"github.com/DATA-DOG/go-sqlmock"
 	mooc "github.com/krls08/hex-arch-api-go/hex_arch_cmdBus/internal"
@@ -25,7 +26,8 @@ func Test_CourseRepository_Save_RepositoryError(t *testing.T) {
 		WithArgs(courseID, courseName, courseDuration).
 		WillReturnError(errors.New("something-failed"))
 
-	repo := NewCourseRepository(db)
+	dbTimeout := 3 * time.Second
+	repo := NewCourseRepository(db, dbTimeout)
 
 	err = repo.Save(context.Background(), course)
 
@@ -47,7 +49,8 @@ func Test_CourseRepository_Save_Succeed(t *testing.T) {
 		WithArgs(courseID, courseName, courseDuration).
 		WillReturnResult(sqlmock.NewResult(0, 1))
 
-	repo := NewCourseRepository(db)
+	dbTimeout := 3 * time.Second
+	repo := NewCourseRepository(db, dbTimeout)
 
 	err = repo.Save(context.Background(), course)
 
